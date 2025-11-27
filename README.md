@@ -67,6 +67,7 @@ Sebelum mulai, siapkan dulu:
    - Klik **New** → isi dengan path ke folder `bin` Flutter, misalnya:
      - `C:\src\flutter\bin`
    - Klik **OK** sampai semua jendela tertutup.
+   - Jika belum berhasil, dapat coba mengikuti step by step ini ['https://docs.flutter.dev/install/manual#add-to-path]
 
 5. Cek apakah Flutter sudah terpasang:
    - Buka **Command Prompt** (CMD) atau **PowerShell**.
@@ -84,6 +85,8 @@ Sebelum mulai, siapkan dulu:
 
 ## 3. Install Android Studio + Android SDK + Emulator
 
+['https://docs.flutter.dev/platform-integration/android/setup']
+
 Android Studio dibutuhkan untuk:
 
 - Android SDK (alat build untuk Android)
@@ -99,11 +102,11 @@ Android Studio dibutuhkan untuk:
 
 1. Buka **Android Studio**.
 2. Di halaman awal, klik **More Actions → SDK Manager**  
-    (jika sudah ada project, lewat menu **File/Settings → Appearance & Behavior → System Settings → Android SDK** atau **Tools → SDK Manager**).
-   ![Halaman Awal Android Stuid](./tutorials/welcome-android-studio.png)
+    (jika sudah ada project, lewat menu **File/Settings → Appearance & Behavior → System Settings → Android SDK** atau **Tools → SDK Manager**). SDK Manager dapat di lihat pada bagian paling bawah dari pop three dots icon.
+   ![Halaman Awal Android Studio](./tutorials/welcome-android-studio.png)
 3. Di tab **SDK Platforms**:
-   - Pastikan ada minimal satu versi Android yang tercentang, misalnya:
-     - **Android 14 (API 34)** atau yang terbaru.
+   - Pastikan ada minimal satu versi Android yang tercentang, misalnya: - **Android 14 (API 34)** atau yang terbaru. Saya hanya menginstall latest SDK (Android 16)
+     ![SDK Platform](./tutorials/sdk-platform.png)
 4. Di tab **SDK Tools**:
    - Pastikan opsi ini tercentang:
      - **Android SDK Build-Tools**
@@ -111,6 +114,7 @@ Android Studio dibutuhkan untuk:
      - **Android SDK Command-line Tools**
      - **Android Emulator**
    - Klik **Apply** / **OK** → tunggu proses download selesai.
+     ![SDK Tools](./tutorials/sdk-tools.png)
 
 ### 3.3. Buat emulator (Android Virtual Device / AVD)
 
@@ -118,9 +122,10 @@ Android Studio dibutuhkan untuk:
    - Dari halaman awal: **More Actions → Virtual Device Manager**,  
      atau
    - Jika ada project: menu **Tools → Device Manager**.
-2. Klik tombol **Create Device** (`+`).
-3. Pilih tipe device, misalnya **Phone → Pixel 4** → klik **Next**.
-4. Pilih versi Android (system image), misalnya Android 13/14:
+2. Klik tombol **Create Device** (`+`) <- Klik icon plus pada bagian atas (Deretan icon Firebase (Api))
+3. Pilih tipe device, lalu klik Next pada bagian bawah kanan
+   ![Device Options](./tutorials/device-options.png)
+4. Pilih versi Android (system image), misalnya Android 16 (latest) API 36:
    - Kalau belum ada, klik **Download** lalu tunggu sampai selesai.
 5. Klik **Next → Finish**.
 6. Di daftar device, klik tombol **Play ▶** untuk menyalakan emulator.
@@ -154,6 +159,15 @@ Perintah ini akan mengecek apakah semua kebutuhan Flutter sudah siap.
    flutter doctor
    ```
 
+![Hasil Flutter Doctor](./tutorials/sdk-platform.png)
+
+## Terdapat tanda (x) pada Google Chrome, karena di device saya tidak menggunakan, dan tidak apa-apa (Jika tidak ingin develop web app)
+
+![New Flutter Project](./tutorials/new-project.png)
+![Select Device](./tutorials/select-device.png)
+
+## Note: Reference 7.2. Klik Select Device, atau jika mengikuti screenshot, klik macOS (darwin), jika emulator sudah terinstall, akan muncul pilihannya. Bisa langsung klik emulator yang telah diinstal sebelumnya.
+
 ````
 
 3. Tunggu sampai proses selesai.
@@ -173,7 +187,7 @@ Perintah ini akan mengecek apakah semua kebutuhan Flutter sudah siap.
    flutter doctor
    ```
 
-Pastikan tidak ada error besar (warning kecil masih wajar untuk pemula).
+Pastikan tidak ada error besar
 
 ---
 
@@ -186,6 +200,9 @@ Kita akan membuat project bernama `hello_world`.
    ```bash
    flutter create hello_world
    ```
+
+   - Atau bisa buka VS Code, install extension flutter, pada menu sidebar, klik extension, lalu ketikkan `flutter`, install
+   - Setelah terinstall bisa CTRL + Shift + P -> ketikkan `new project` -> Pilih Flutter: New Project (Lihat Gambar di atas) -> Pilih Application -> Pilih directory mau simpan project dimana -> ketikkan nama, misal `hello_world`
 
 2. Masuk ke folder project:
 
@@ -214,7 +231,7 @@ Kita akan membuat project bernama `hello_world`.
 
 ### 7.2. Jalankan dari VS Code
 
-1. Di VS Code, lihat bagian kanan bawah:
+1. Di VS Code, lihat bagian kanan bawah (Liaht Gambar di atas):
    - Seharusnya muncul nama device/emulator (misalnya `Pixel_4_API_34`).
    - Kalau belum muncul, klik bagian tersebut dan pilih emulator yang tersedia.
 
@@ -241,7 +258,7 @@ Sekarang kita sederhanakan tampilan agar hanya muncul teks **Hello World!**.
    lib/main.dart
    ```
 
-2. Hapus isi file tersebut dan ganti dengan kode berikut:
+2. Hapus isi file tersebut dan copy paste dengan kode berikut:
 
    ```dart
    import 'package:flutter/material.dart';
@@ -347,11 +364,5 @@ Setelah berhasil menampilkan “Hello World!”, kamu bisa lanjut belajar:
 - Cara mengatur warna, margin, padding, dan layout.
 - Cara menambahkan halaman baru (navigation / routes).
 
-Selamat! Kamu sudah berhasil membuat dan menjalankan aplikasi Flutter pertama 🎉
-
-```
-
-Kalau nanti kamu mau bikin **README lanjutan** (part 2) untuk widget dasar atau struktur folder Flutter, kita bisa sambung dari sini dan pakai gaya yang sama biar konsisten.
-::contentReference[oaicite:0]{index=0}
 ```
 ````
