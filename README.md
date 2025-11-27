@@ -100,7 +100,7 @@ Android Studio dibutuhkan untuk:
 1. Buka **Android Studio**.
 2. Di halaman awal, klik **More Actions → SDK Manager**  
     (jika sudah ada project, lewat menu **File/Settings → Appearance & Behavior → System Settings → Android SDK** atau **Tools → SDK Manager**).
-   ![Halaman Awal Android Stuid](./screenshots/welcome-android-studio.png)
+   ![Halaman Awal Android Stuid](./tutorials/welcome-android-studio.png)
 3. Di tab **SDK Platforms**:
    - Pastikan ada minimal satu versi Android yang tercentang, misalnya:
      - **Android 14 (API 34)** atau yang terbaru.
