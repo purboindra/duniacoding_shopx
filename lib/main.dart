@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
+import 'package:shop_x/features/main/main_screen.dart';
 
 void main() {
   runApp(ProviderScope(child: const MyApp()));
@@ -83,7 +84,7 @@ class MyApp extends StatelessWidget {
           ),
         ),
       ),
-      home: Center(child: Text("Hello World")),
+      home: MainScreen(),
     );
   }
 }
