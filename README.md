@@ -1,5 +1,162 @@
 # Belajar Flutter dari Nol
 
+**Implementation Google Sign In**
+
+## 🔐 Google Sign-In Integration
+
+Untuk fitur login dengan Google, ada dua cara konfigurasi utama yang bisa kita pilih:
+
+1. **Menggunakan Firebase Project**
+2. **Menggunakan Google Cloud Console langsung (tanpa Firebase)**
+
+---
+
+### Opsi 1 – Setup lewat Firebase (lebih simple, beginner friendly)
+
+Dengan cara ini, kita mengelola semuanya lewat **Firebase Console**.
+
+**Kapan pakai ini?**
+
+- Kalau kita juga memakai **Firebase Auth**, **Firestore**, atau layanan Firebase lain.
+- Kalau ingin dashboard yang enak untuk melihat daftar user, login method, dsb.
+
+**Langkah besar (high-level):**
+
+1. Buka [Firebase Console](https://console.firebase.google.com/) dan buat project baru.
+2. Klik **Project Overview** pada sidebar untuk menambahkan aplikasi
+3. Klik icon + lalu tambah aplikasi **Android**:
+   - Isi `package name` sesuai dengan `applicationId` di file `android/app/build.gradle` pada project kita.
+4. Download file `google-services.json` dan taruh di folder:
+   - `android/app/google-services.json`
+5. Pada sidebar, kita harus mengaktifkan **Google Sign-In** di menu **Authentication → Sign-in method**.
+
+- Add new provider, lalu pilih **Google**
+
+5. Tambahkan plugin dan dependency yang diminta:
+   - `id("com.google.gms.google-services") version "4.4.4" apply false` di Gradle.
+   - `android/build.gradle.kts`
+
+`````dart
+plugins{
+    id("com.google.gms.google-services") version "4.3.15" apply false
+}
+
+6. Di Flutter, gunakan `google_sign_in` (atau `firebase_auth` + `google_sign_in`) untuk handle tombol **"Continue with Google"**.
+
+> Dengan cara ini, kita **tidak perlu** mengutak-atik OAuth di Google Cloud Console secara manual.
+> Firebase yang akan menghubungkan project kita dengan Google Sign-In di belakang layar.
+
+---
+
+### Opsi 2 – Setup lewat Google Cloud Console (tanpa Firebase)
+
+Dengan cara ini, kita langsung mengatur **OAuth Client ID** di **Google Cloud Console**.
+
+**Kapan pakai ini?**
+
+- Kalau backend kita **bukan Firebase** (misalnya Node, Go, Laravel, dll).
+- Kalau kita hanya butuh **ID token / access token Google** untuk di-verifikasi di server sendiri.
+- Ingin kontrol penuh di Google Cloud (misalnya pakai Google Identity Services langsung).
+
+**Langkah besar (high-level):**
+
+1. Buka [Google Cloud Console](https://console.cloud.google.com/), pilih / buat project.
+2. Aktifkan **OAuth consent screen** (misalnya `External` untuk publik).
+3. Buka menu **APIs & Services → Credentials**.
+4. Buat **OAuth Client ID tipe Android**:
+   - Isi `package name` sesuai `applicationId` di `android/app/build.gradle`.
+   - Masukkan **SHA-1** keystore yang digunakan (bisa dilihat dari perintah `./gradlew signingReport` di folder `android`).
+5. (Opsional, tapi sering diperlukan) buat juga **OAuth Client ID tipe Web**:
+   - Client ID ini yang sering dipakai sebagai `clientId` di konfigurasi `GoogleSignIn` (terutama kalau tokennya mau dikirim ke backend).
+6. Di Flutter, gunakan package `google_sign_in`, dan pastikan konfigurasi **clientId / package name / SHA-1** sesuai dengan yang didaftarkan di Google Cloud.
+
+> Dengan cara ini, kita **tidak memakai Firebase sama sekali**.
+> Aplikasi langsung berkomunikasi dengan layanan Google Sign-In via OAuth.
+
+---
+
+### Mana yang dipakai di project ini?
+
+> 💡 **Catatan untuk project ini**
+> Di project ini, kita menggunakan **Firebase**:
+>
+> - **Firebase route** → lebih praktis untuk pemula dan sekaligus pakai Firebase Auth/Firestore,
+>   atau
+> - **Google Cloud Console route** → karena backend kita custom dan kita hanya butuh ID token dari Google untuk diverifikasi di server.
+
+Sesuaikan bagian ini dengan arsitektur backend kamu.
+
+---
+
+### Contoh kode tombol "Continue with Google"
+
+````dart
+@override
+void initState() {
+    unawaited(
+      signIn.initialize().then((_) {
+        signIn.authenticationEvents
+            .listen(_handleAuthenticationEvent)
+            .onError(_handleAuthenticationError);
+      }),
+    );
+    super.initState();
+  }
+
+final GoogleSignIn signIn = GoogleSignIn.instance;
+
+  Future<void> _handleAuthenticationEvent(
+    GoogleSignInAuthenticationEvent event,
+  ) async {
+    final GoogleSignInAccount? user = switch (event) {
+      GoogleSignInAuthenticationEventSignIn() => event.user,
+      GoogleSignInAuthenticationEventSignOut() => null,
+    };
+
+    /// Save data to local storage
+    final prefs = await SharedPreferences.getInstance();
+
+    if (user != null) {
+      await prefs.setString("username", user.displayName ?? "User Guest");
+      await prefs.setString("email", user.email);
+
+      if (user.photoUrl != null) {
+        await prefs.setString("image", user.photoUrl!);
+      }
+
+      if (!mounted) return;
+
+      Navigator.pushAndRemoveUntil(
+        context,
+        MaterialPageRoute(builder: (context) => MainScreen()),
+        (route) => false,
+      );
+    }
+  }
+
+  Future<void> _handleAuthenticationError(Object e) async {
+    setState(() {
+      _errorMessage = e is GoogleSignInException
+          ? _errorMessageFromSignInException(e)
+          // Default value
+          : 'Unknown error: $e';
+    });
+    ScaffoldMessenger.of(context).showSnackBar(
+      SnackBar(
+        content: Text(_errorMessage ?? "Unknown Error"),
+        backgroundColor: Colors.red,
+      ),
+    );
+  }
+
+  String _errorMessageFromSignInException(GoogleSignInException e) {
+    return switch (e.code) {
+      GoogleSignInExceptionCode.canceled => 'Sign in canceled',
+      // Default value
+      _ => 'GoogleSignInException ${e.code}: ${e.description}',
+    };
+  }
+
 **Install Flutter + Emulator sampai Hello World**
 
 Dokumen ini menjelaskan langkah demi langkah untuk meng-install Flutter di Windows dan menjalankan aplikasi **Hello World** pertama kamu di emulator Android.
@@ -40,7 +197,7 @@ Sebelum mulai, siapkan dulu:
 
 ## 2. Install Flutter SDK
 
-1. Buka situs resmi Flutter:  
+1. Buka situs resmi Flutter:
    [https://flutter.dev](https://flutter.dev) → klik **Docs** (di pojok kanan atas) → **Get started** → pilih **Windows**.
 
 2. Klik/tap **Custom setup**
@@ -54,13 +211,13 @@ Sebelum mulai, siapkan dulu:
 3. Setelah selesai download:
    - Klik kanan file `.zip` → **Extract All**.
    - Pindahkan folder hasil extract ke lokasi yang mudah diingat, misalnya:
-     - `C:\src\flutter`  
+     - `C:\src\flutter`
        atau
      - `C:\development\flutter`
    - Hindari folder yang butuh izin admin atau administrator ya, seperti `C:\Program Files`.
 
 4. Tambahkan Flutter ke **PATH**:
-   - Klik tombol **Start** → ketik **Environment Variables** → pilih  
+   - Klik tombol **Start** → ketik **Environment Variables** → pilih
      **“Edit the system environment variables”**.
    - Klik tombol **Environment Variables…**.
    - Di bagian **User variables**, pilih `Path` → klik **Edit**.
@@ -94,14 +251,14 @@ Android Studio dibutuhkan untuk:
 
 ### 3.1. Install Android Studio
 
-1. Buka:  
+1. Buka:
    [https://developer.android.com/studio](https://developer.android.com/studio)
 2. Download **Android Studio** (Versi sekarang Otter) untuk Windows dan install seperti biasa (Next → Next → Finish).
 
 ### 3.2. Pastikan Android SDK & Tools terpasang
 
 1. Buka **Android Studio**.
-2. Di halaman awal, klik **More Actions → SDK Manager**  
+2. Di halaman awal, klik **More Actions → SDK Manager**
     (jika sudah ada project, lewat menu **File/Settings → Appearance & Behavior → System Settings → Android SDK** atau **Tools → SDK Manager**). SDK Manager dapat di lihat pada bagian paling bawah dari pop three dots icon.
    ![Halaman Awal Android Studio](./tutorials/welcome-android-studio.png)
 3. Di tab **SDK Platforms**:
@@ -119,7 +276,7 @@ Android Studio dibutuhkan untuk:
 ### 3.3. Buat emulator (Android Virtual Device / AVD)
 
 1. Di Android Studio:
-   - Dari halaman awal: **More Actions → Virtual Device Manager**,  
+   - Dari halaman awal: **More Actions → Virtual Device Manager**,
      atau
    - Jika ada project: menu **Tools → Device Manager**.
 2. Klik tombol **Create Device** (`+`) <- Klik icon plus pada bagian atas (Deretan icon Firebase (Api))
@@ -137,7 +294,7 @@ Android Studio dibutuhkan untuk:
 
 VS Code adalah editor kode yang ringan dan nyaman untuk Flutter.
 
-1. Download VS Code di:  
+1. Download VS Code di:
    [https://code.visualstudio.com](https://code.visualstudio.com)
 2. Install seperti biasa.
 3. Buka **VS Code**.
@@ -157,7 +314,7 @@ Perintah ini akan mengecek apakah semua kebutuhan Flutter sudah siap.
 
    ```bash
    flutter doctor
-   ```
+`````
 
 ![Hasil Flutter Doctor](./tutorials/sdk-platform.png)
 
