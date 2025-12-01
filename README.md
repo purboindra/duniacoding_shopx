@@ -36,9 +36,8 @@ Dengan cara ini, kita mengelola semuanya lewat **Firebase Console**.
    - `id("com.google.gms.google-services") version "4.4.4" apply false` di Gradle.
    - `android/build.gradle.kts`
 
-`````dart
 plugins{
-    id("com.google.gms.google-services") version "4.3.15" apply false
+id("com.google.gms.google-services") version "4.3.15" apply false
 }
 
 6. Di Flutter, gunakan `google_sign_in` (atau `firebase_auth` + `google_sign_in`) untuk handle tombol **"Continue with Google"**.
@@ -314,7 +313,7 @@ Perintah ini akan mengecek apakah semua kebutuhan Flutter sudah siap.
 
    ```bash
    flutter doctor
-`````
+````
 
 ![Hasil Flutter Doctor](./tutorials/sdk-platform.png)
 
