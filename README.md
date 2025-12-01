@@ -36,9 +36,11 @@ Dengan cara ini, kita mengelola semuanya lewat **Firebase Console**.
    - `id("com.google.gms.google-services") version "4.4.4" apply false` di Gradle.
    - `android/build.gradle.kts`
 
-plugins{
-id("com.google.gms.google-services") version "4.3.15" apply false
-}
+```dart
+  plugins{
+    id("com.google.gms.google-services") version "4.3.15" apply false
+  }
+```
 
 6. Di Flutter, gunakan `google_sign_in` (atau `firebase_auth` + `google_sign_in`) untuk handle tombol **"Continue with Google"**.
 
@@ -89,7 +91,7 @@ Sesuaikan bagian ini dengan arsitektur backend kamu.
 
 ### Contoh kode tombol "Continue with Google"
 
-````dart
+```dart
 @override
 void initState() {
     unawaited(
@@ -155,6 +157,7 @@ final GoogleSignIn signIn = GoogleSignIn.instance;
       _ => 'GoogleSignInException ${e.code}: ${e.description}',
     };
   }
+```
 
 **Install Flutter + Emulator sampai Hello World**
 
@@ -258,7 +261,7 @@ Android Studio dibutuhkan untuk:
 
 1. Buka **Android Studio**.
 2. Di halaman awal, klik **More Actions → SDK Manager**
-    (jika sudah ada project, lewat menu **File/Settings → Appearance & Behavior → System Settings → Android SDK** atau **Tools → SDK Manager**). SDK Manager dapat di lihat pada bagian paling bawah dari pop three dots icon.
+   (jika sudah ada project, lewat menu **File/Settings → Appearance & Behavior → System Settings → Android SDK** atau **Tools → SDK Manager**). SDK Manager dapat di lihat pada bagian paling bawah dari pop three dots icon.
    ![Halaman Awal Android Studio](./tutorials/welcome-android-studio.png)
 3. Di tab **SDK Platforms**:
    - Pastikan ada minimal satu versi Android yang tercentang, misalnya: - **Android 14 (API 34)** atau yang terbaru. Saya hanya menginstall latest SDK (Android 16)
@@ -313,7 +316,9 @@ Perintah ini akan mengecek apakah semua kebutuhan Flutter sudah siap.
 
    ```bash
    flutter doctor
-````
+   ```
+
+```
 
 ![Hasil Flutter Doctor](./tutorials/sdk-platform.png)
 
@@ -324,7 +329,7 @@ Perintah ini akan mengecek apakah semua kebutuhan Flutter sudah siap.
 
 ## Note: Reference 7.2. Klik Select Device, atau jika mengikuti screenshot, klik macOS (darwin), jika emulator sudah terinstall, akan muncul pilihannya. Bisa langsung klik emulator yang telah diinstal sebelumnya.
 
-````
+```
 
 3. Tunggu sampai proses selesai.
 
@@ -521,4 +526,5 @@ Setelah berhasil menampilkan “Hello World!”, kamu bisa lanjut belajar:
 - Cara menambahkan halaman baru (navigation / routes).
 
 ```
-````
+
+```
