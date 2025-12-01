@@ -159,6 +159,8 @@ final GoogleSignIn signIn = GoogleSignIn.instance;
   }
 ```
 
+---
+
 **Install Flutter + Emulator sampai Hello World**
 
 Dokumen ini menjelaskan langkah demi langkah untuk meng-install Flutter di Windows dan menjalankan aplikasi **Hello World** pertama kamu di emulator Android.
